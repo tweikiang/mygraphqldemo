@@ -1,5 +1,4 @@
 const shortid = require('shortid');
-shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ56');
 const resolvers = (models) => ({
   Query: {
     getUserById(root, { id }) {
