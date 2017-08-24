@@ -5,6 +5,7 @@ const { makeExecutableSchema } = require('graphql-tools');
 
 const User = require('./models/user');
 const Confession = require('./models/confession');
+const Sequence = require('./models/sequence');
 
 const graphqlSchema = require('./graphql/schema');
 const createResolvers = require('./graphql/resolvers');
@@ -20,7 +21,7 @@ mongoose.connect('mongodb://'+Config.db.host+':'+Config.db.port+'/'+Config.db.ap
 
 const executableSchema = makeExecutableSchema({
   typeDefs: [graphqlSchema],
-  resolvers: createResolvers({ User, Confession }),
+  resolvers: createResolvers({ User, Confession, Sequence }),
 });
 
 server.register({

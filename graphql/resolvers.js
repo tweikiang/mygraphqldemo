@@ -1,4 +1,3 @@
-const shortid = require('shortid');
 const resolvers = (models) => ({
   Query: {
     getUserById(root, { id }) {
@@ -6,11 +5,15 @@ const resolvers = (models) => ({
     },
 
     getUserByEmail(root, { email }) {
-      return models.User.findOne({ email }).then((response) => response);
+      return models.User.findOne({ email: email }).then((response) => response);
     },
 
     getConfessionById(root, { id }) {
       return models.Confession.findById(id).then((response) => response);
+    },
+
+    getConfessionByUid(root, { uid }) {
+      return models.Confession.findOne({'uid':uid}).then((response) => response);
     },
   },
   Mutation: {
@@ -20,8 +23,21 @@ const resolvers = (models) => ({
     },
     createConfession(root, args) {
       const confession = new models.Confession(args);
-      confession.uid = shortid.generate();
-      return confession.save().then((response) => response);
+      return models.Sequence.findOne({'purpose':'confession'}).then((data) => {
+        console.log(data);
+        if(!data){
+          data = new models.Sequence();
+          data.count = 1;
+          data.purpose = 'confession';
+        }
+        confession.uid = ""+data.count;
+        data.count++;
+        console.log('data 2 =====')
+        console.log(data)
+        return data.save().then((c)=>{
+          return confession.save().then((response) => response);
+        });
+      });
     },
   },
 });
